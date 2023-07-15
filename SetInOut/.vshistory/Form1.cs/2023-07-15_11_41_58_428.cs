@@ -505,8 +505,6 @@ namespace SetInOut
                         {
                             double DataValue = Form1.istrList[index].GetTipo() != 'I' ? 0.0 : 1.0;
                             this.datiCN.Sdm.SetData("SetIO", (string)null, num.ToString(), "TipoIO", DataValue);
-
-
                             this.datiCN.Sdm.SetData("SetIO", (string)null, num.ToString(), "Ind", (double)Form1.istrList[index].GetLefthVal());
                             this.datiCN.Sdm.SetData("SetIO", (string)null, num.ToString(), "Valore", (double)Form1.istrList[index].GetLivelloLogico());
                             ++num;

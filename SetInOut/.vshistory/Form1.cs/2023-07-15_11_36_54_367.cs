@@ -15,7 +15,7 @@ namespace SetInOut
 {
     public partial class Form1 : Form
     {
-        private static Instructions[] istrList;
+        private static istruzione[] istrList;
         private int numIstr = 0;
         private bool siCN = true;
         private DatiCn datiCN;
@@ -80,6 +80,9 @@ namespace SetInOut
 
         public Form1()
         {
+         
+
+
 
             this.InitializeComponent();
             bool flag = this.siCN;
@@ -114,26 +117,26 @@ namespace SetInOut
         private static void Main()
         {
 
-            Form1.istrList = new Instructions[100];
+            Form1.istrList = new istruzione[100];
             Application.Run(new Form1());
         }
         public void Execute()
         {
             try
             {
-                bool flag = this.VerifySyntax();
+                bool flag = this.VerificaSintassi();
                 if (flag)
                 {
-                    this.ExecuteInstructions();
+                    this.EseguiIstruzioni();
                 }
             }
             catch (ThreadAbortException)
             {
-                this.listBox1.Items.Add("Execution stopped...");
+                this.listBox1.Items.Add("Esecuzione interrotta...");
             }
         }
 
-        private bool VerifySyntax()
+        private bool VerificaSintassi()
         {
             bool flag = true;
             string[] lines = this.richTextBox1.Lines;
@@ -154,7 +157,7 @@ namespace SetInOut
                     {
                         case ';':
                             this.listBox1.Items.Add((object)r);
-                            Form1.istrList[this.numIstr] = new Instructions(r);
+                            Form1.istrList[this.numIstr] = new istruzione(r);
                             ++this.numIstr;
                             break;
                         case 'D':
@@ -172,7 +175,7 @@ namespace SetInOut
                                 break;
                             }
                             this.listBox1.Items.Add((object)r);
-                            Form1.istrList[this.numIstr] = new Instructions('D', int32_1, r);
+                            Form1.istrList[this.numIstr] = new istruzione('D', int32_1, r);
                             ++this.numIstr;
                             break;
                         case 'I':
@@ -235,7 +238,7 @@ namespace SetInOut
                                 {
                                     Convert.ToInt32(current2);
                                     this.listBox1.Items.Add((object)r);
-                                    Form1.istrList[this.numIstr] = new Instructions(current1, int32_2, this.LivelloLogico(current2), r);
+                                    Form1.istrList[this.numIstr] = new istruzione(current1, int32_2, this.LivelloLogico(current2), r);
                                     ++this.numIstr;
                                     break;
                                 }
@@ -482,7 +485,7 @@ namespace SetInOut
         //    this.listBox1.Items.Add("Esecuzione completata...");
         //}
 
-        private void ExecuteInstructions()
+        private void EseguiIstruzioni()
         {
             int num = 1;
             this.listBox1.Items.Clear();
@@ -492,21 +495,19 @@ namespace SetInOut
                 switch (Form1.istrList[index].GetTipo())
                 {
                     case ';':
-                        this.listBox1.Items.Add((object)Form1.istrList[index].GetTextLine());
+                        this.listBox1.Items.Add((object)Form1.istrList[index].GetTestoRiga());
                         break;
                     case 'D':
-                        this.listBox1.Items.Add((object)Form1.istrList[index].GetTextLine());
+                        this.listBox1.Items.Add((object)Form1.istrList[index].GetTestoRiga());
                         Thread.Sleep(Form1.istrList[index].GetLefthVal() * 10);
                         break;
                     case 'I':
                     case 'O':
-                        this.listBox1.Items.Add((object)Form1.istrList[index].GetTextLine());
+                        this.listBox1.Items.Add((object)Form1.istrList[index].GetTestoRiga());
                         if (this.siCN)
                         {
                             double DataValue = Form1.istrList[index].GetTipo() != 'I' ? 0.0 : 1.0;
                             this.datiCN.Sdm.SetData("SetIO", (string)null, num.ToString(), "TipoIO", DataValue);
-
-
                             this.datiCN.Sdm.SetData("SetIO", (string)null, num.ToString(), "Ind", (double)Form1.istrList[index].GetLefthVal());
                             this.datiCN.Sdm.SetData("SetIO", (string)null, num.ToString(), "Valore", (double)Form1.istrList[index].GetLivelloLogico());
                             ++num;
